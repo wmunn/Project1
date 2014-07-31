@@ -1,7 +1,7 @@
 package diskmgr;
 
 import global.Page;
-
+   
 /**
  * First page and starting point of the database file.
  */
