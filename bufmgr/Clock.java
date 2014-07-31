@@ -18,7 +18,7 @@ public class Clock extends Replacer {
     
     public Clock() {
         super(bufferManager)  ;
-        current = 0;
+        current = 0  ;
     }
   
     public void newPage(FrameDescriptor fdesc) {
