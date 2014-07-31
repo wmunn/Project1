@@ -17,7 +17,7 @@ public class Clock extends Replacer {
     public static BufMgr bufferManager;
     
     public Clock() {
-        super(bufferManager);
+        super(bufferManager)  ;
         current = 0;
     }
   
