@@ -1,122 +1,61 @@
 package global;
 
 /**
- * Provides conversion routines for getting and setting data in byte arrays.
+ * Global constants; implement this interface to access them conveniently.
  */
-public class Convert {
+public interface GlobalConst {
 
-  /**
-   * Reads from the given byte array at the specified position, and converts it
-   * into a unicode character.
-   */
-  public static char getCharValue(int pos, byte[] data) {
+  //
+  // Disk Manager Constants
+  //
 
-    // ignoring that UTF-8 could be up to six bytes
-    return (char) data[pos];
+  /** Size of a page, in bytes. 1024 is artificially small 
+   * so we can get lots of I/Os with small data files */
+  public static final int PAGE_SIZE = 1024;
 
-  } // public static char getCharValue(int pos, byte[] data)
+  /** Page number of an invalid page (i.e. null pointer). */
+  public static final int INVALID_PAGEID = -1;
 
-  /**
-   * Writes a unicode character into the given byte array at the specified
-   * position.
-   */
-  public static void setCharValue(char value, int pos, byte[] data) {
+  /** Page number of the first page in a database file. */
+  public static final int FIRST_PAGEID = 0;
 
-    // ignoring that UTF-8 could be up to six bytes
-    data[pos] = (byte) value;
+  /** Maximum size of a name (i.e. of files or attributes). */
+  public static final int NAME_MAXLEN = 50;
 
-  } // public static void setCharValue(char value, int pos, byte[] data)
+  //
+  // Buffer Manager Constants
+  //
 
-  /**
-   * Reads from the given byte array at the specified position, and converts it
-   * into a short.
-   */
-  public static short getShortValue(int pos, byte[] data) {
+  /** Copy the mempage parameter into the frame. */
+  public static final int PIN_MEMCPY = 10;
 
-    return (short) (((data[pos] & 0xff) << 8) | (data[pos + 1] & 0xff));
+  /** Copy the disk page into the frame. */
+  public static final int PIN_DISKIO = 11;
 
-  } // public static short getShortValue(int pos, byte[] data)
+  /** Don't copy anything into the frame. */
+  public static final int PIN_NOOP = 12;
+  
+  /** Forces the page to be written to disk when unpinned. */
+  public static final boolean UNPIN_DIRTY = true;
 
-  /**
-   * Writes a short into the given byte array at the specified position.
-   */
-  public static void setShortValue(short value, int pos, byte[] data) {
+  /** Optimization to avoid writing to disk when unpinned. */
+  public static final boolean UNPIN_CLEAN = false;
 
-    data[pos] = (byte) ((value >> 8) & 0xff);
-    data[pos + 1] = (byte) (value & 0xff);
+  //
+  // Heap File Constants
+  //
 
-  } // public static void setShortValue(short value, int pos, byte[] data)
+  /** Length of an "empty" slot in a heap file page. */
+  public static final int EMPTY_SLOT = -1;
 
-  /**
-   * Reads from the given byte array at the specified position, and converts it
-   * into an integer.
-   */
-  public static int getIntValue(int pos, byte[] data) {
+  //
+  // System Catalog Constants
+  //
 
-    return ((data[pos] & 0xff) << 24) | ((data[pos + 1] & 0xff) << 16)
-        | ((data[pos + 2] & 0xff) << 8) | (data[pos + 3] & 0xff);
+  /** Maximum length of a column (in bytes). */
+  public static final int MAX_COLSIZE = 1001;
 
-  } // public static int getIntValue(int pos, byte[] data)
+  /** Maximum length of a tuple (in bytes). */
+  public static final int MAX_TUPSIZE = 1004;
 
-  /**
-   * Writes an integer into the given byte array at the specified position.
-   */
-  public static void setIntValue(int value, int pos, byte[] data) {
-
-    data[pos] = (byte) ((value >> 24) & 0xff);
-    data[pos + 1] = (byte) ((value >> 16) & 0xff);
-    data[pos + 2] = (byte) ((value >> 8) & 0xff);
-    data[pos + 3] = (byte) (value & 0xff);
-
-  } // public static void setIntValue(int value, int pos, byte[] data)
-
-  /**
-   * Reads from the given byte array at the specified position, and converts it
-   * to a float.
-   */
-  public static float getFloatValue(int pos, byte[] data) {
-
-    // let java do the IEEE 754 conversion
-    return Float.intBitsToFloat(getIntValue(pos, data));
-
-  } // public static float getFloatValue(int pos, byte[] data)
-
-  /**
-   * Writes a float into the given byte array at the specified position.
-   */
-  public static void setFloatValue(float value, int pos, byte[] data) {
-
-    // let java do the IEEE 754 conversion
-    setIntValue(Float.floatToIntBits(value), pos, data);
-
-  } // public static void setFloatValue(float value, int pos, byte[] data)
-
-  /**
-   * Reads from the given byte array at the specified position, and converts it
-   * to a string of given length.
-   */
-  public static String getStringValue(int pos, byte[] data, int length) {
-
-    // validate the maximum length
-    int buflen = data.length - pos;
-    if (buflen < length) {
-      length = buflen;
-    }
-
-    // is there any way in Java to avoid these mem copies?
-    return new String(data, pos, length).trim();
-
-  } // public static String getStringValue(int pos, byte[] data, int length)
-
-  /**
-   * Writes a string into the given byte array at the specified position.
-   */
-  public static void setStringValue(String value, int pos, byte[] data) {
-
-    // is there any way in Java to avoid these mem copies?
-    byte[] ba = value.getBytes();
-    System.arraycopy(ba, 0, data, pos, ba.length);
-
-  } // public static void setStringValue(String value, int pos, byte[] data)
-
-} // public class Convert
+} // public interface GlobalConst
